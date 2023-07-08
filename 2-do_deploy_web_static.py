@@ -38,7 +38,8 @@ def do_deploy(archive_path):
         return False
 
     # Extract the archive into the release directory
-    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(file, name)).failed:
+    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
+            .format(file, name)).failed:
         return False
 
     # Remove the temporary archive
@@ -50,13 +51,17 @@ def do_deploy(archive_path):
         return False
 
     # Remove the now empty web_static folder
-    if run("rm -rf /data/web_static/releases/{}/web_static".format(name)).failed:
+    if run("rm -rf /data/web_static/releases/{}/web_static"
+            .format(name)).failed:
         return False
 
     # Update the symbolic link to the new release directory
     if run("rm -rf /data/web_static/current").failed:
         return False
-    if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".format(name)).failed:
+    if run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(name)).failed:
         return False
+    
+    print("New version deployed!")
 
     return True
