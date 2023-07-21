@@ -24,11 +24,12 @@ def c_with_text(text):
     formatted_text = text.replace('_', ' ')
     return "C {}".format(formatted_text)
 
-@app.route('/python/', defaults = {'text': 'is_cool'}, strict_slashes=False)
+@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def python_with_text(text):
+    # Replace underscores with spaces in the text variable
     formatted_text = text.replace('_', ' ')
-    return "python{}".format(formatted_text)
+    return "Python {}".format(formatted_text)
 
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', port =5000)
