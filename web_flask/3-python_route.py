@@ -24,7 +24,7 @@ def c_with_text(text):
     formatted_text = text.replace('_', ' ')
     return "C {}".format(formatted_text)
 
-@app.route('/python/', defaults = {'text', 'is_cool'}, strict_slashes=False)
+@app.route('/python/', defaults = {'text': 'is_cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def python_with_text(text):
     formatted_text = text.replace('_', ' ')
