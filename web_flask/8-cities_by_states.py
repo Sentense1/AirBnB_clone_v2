@@ -25,8 +25,8 @@ def cities_by_states():
 
     States/cities are sorted by name.
     """
-    # Fetch all State objects from the DBStorage and sort them by name (A->Z)
-    states = sorted(storage.all(State).values(), key=lambda s: s.name)
+    # Fetch all State objects from the DBStorage
+    states = storage.all(State)
 
     # Render the template and pass the list of states to the template
     return render_template('8-cities_by_states.html', states=states)
