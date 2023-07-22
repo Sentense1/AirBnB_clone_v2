@@ -28,7 +28,7 @@ def states():
     # Fetch all State objects from the storage (FileStorage or DBStorage)
     states = storage.all("State")
 
-    # Render the "9-states.html" template and pass 
+    # Render the "9-states.html" template and pass
     #   the list of states as the variable 'state'
     return render_template("9-states.html", state=states)
 
