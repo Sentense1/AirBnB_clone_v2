@@ -3,8 +3,6 @@
 
 from flask import Flask, render_template
 from models import storage
-from models.state import State
-from sqlalchemy.orm import scoped_session, sessionmaker
 
 # creates an instance of the Flask class and assigns it to the variable app
 app = Flask(__name__)
@@ -28,12 +26,8 @@ def states_list():
     # Fetch all State objects from the DBStorage and sort them by name (A->Z)
     # states = sorted(storage.all(State).values(), key=lambda s: s.name)
 
-    states = [s.to_dict() for s in storage.all(State).values()]
-
-    sorted_states = sorted(states, key=lambda s: (s.get('name'), s.get('id')))
-
     # Render the template and pass the list of states to the template
-    return render_template("7-states_list.html", states=sorted_states)
+    return render_template("7-states_list.html", states=storage.all('State'))
 
 
 if __name__ == "__main__":
