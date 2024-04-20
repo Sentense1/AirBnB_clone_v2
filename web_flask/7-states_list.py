@@ -3,7 +3,8 @@
 from flask import Flask, render_template
 from models import storage
 
-# creates an instance of the Flask class and assigns it to the variable app
+# creates an instance of the Flask class and assigns
+# it to the variable app
 app = Flask(__name__)
 
 
@@ -15,7 +16,8 @@ def states_list():
     States are sorted by name.
     """
     # Render the template and pass the list of states to the template
-    return render_template("7-states_list.html", states=storage.all('State'))
+    return render_template("7-states_list.html",
+                           states=storage.all('State'))
 
 
 # Teardown app context to remove the
