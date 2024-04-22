@@ -3,15 +3,16 @@
 from os import getenv
 from sqlalchemy import (Column, Float,
                         ForeignKey, Integer,
-                        String)
+                        String, Table)
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 import models
 from models.review import Review
 from models.amenity import Amenity
 
+
 # Define the association table
-association_table = Table('place_amenity', Base.metadata,
+place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60), ForeignKey("places.id"),
                              primary_key=True, nullable=False),
                       Column('amenity_id', String(60),
