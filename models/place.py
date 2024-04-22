@@ -11,7 +11,7 @@ from models.review import Review
 from models.amenity import Amenity
 
 # Define the association table
-place_amenity = Table('place_amenity', Base.metadata,
+association_table = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60), ForeignKey("places.id"),
                              primary_key=True, nullable=False),
                       Column('amenity_id', String(60),
