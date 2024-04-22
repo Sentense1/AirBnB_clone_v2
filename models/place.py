@@ -58,9 +58,8 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
     amenities = relationship("Amenity", secondary="place_amenity",
-                             viewonly=False)
+                             viewonly=False, back_populates="places")
     amenity_ids = []
-    overlaps="place_amenities"
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
@@ -80,7 +79,6 @@ class Place(BaseModel, Base):
                 if amenity.id in self.amenity_ids:
                     amenity_list.append(amenity)
             return amenity_list
-
         @amenities.setter
         def amenities(self, value):
             if type(value) == Amenity:
