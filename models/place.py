@@ -31,6 +31,7 @@ class Place(BaseModel, Base):
     amenities = relationship("Amenity", secondary="place_amenity",
                              viewonly=False,
                              back_populates='places')
+    amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
         city_id = ""
