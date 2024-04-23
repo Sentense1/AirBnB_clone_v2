@@ -30,7 +30,7 @@ class test_basemodel(unittest.TestCase):
         """Clean up any resources created during the test cases."""
         try:
             os.remove('file.json')
-        except:
+        except Exception:
             pass
 
     def test_default(self):
@@ -74,11 +74,14 @@ class test_basemodel(unittest.TestCase):
         """Test case to check if the 'str' method returns\
                 the expected string representation."""
         i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id, i.__dict__))
+        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
+                                                       i.__dict__))
 
     def test_todict(self):
-        """Test case to check if the 'to_dict' method \
-                returns a dictionary representation of the BaseModel instance."""
+        """Test case to check if the 'to_dict' method
+                returns a dictionary representation of
+                the BaseModel instance.
+        """
         i = self.value()
         n = i.to_dict()
         self.assertEqual(i.to_dict(), n)
@@ -116,4 +119,3 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
-

@@ -20,7 +20,8 @@ class test_state(test_basemodel):
 
     def test_name3(self):
         """
-        Test case to check the data type of the 'name' attribute in the State model.
+        Test case to check the data type of the
+        'name' attribute in the State model.
         """
         new = self.value()
         self.assertEqual(type(new.name), str)

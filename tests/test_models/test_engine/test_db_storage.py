@@ -25,7 +25,8 @@ class TestDBStorage(unittest.TestCase):
         city = City(name="San Francisco", state_id=state.id)
         user = User(email="test@example.com", password="password")
         place = Place(name="Cozy Apartment", city_id=city.id, user_id=user.id)
-        review = Review(text="Great place!", place_id=place.id, user_id=user.id)
+        review = Review(text="Great place!", place_id=place.id,
+                        user_id=user.id)
         amenity = Amenity(name="WiFi")
         storage.new(state)
         storage.new(city)
@@ -37,8 +38,8 @@ class TestDBStorage(unittest.TestCase):
 
         # Test all() with cls=None
         all_objs = storage.all()
-        expected_output = ("State.{}\nCity.{}\nUser.{}\nPlace.{}\nReview.{}\nAmenity.{}\n"
-                           .format(state.id, city.id, user.id, place.id, review.id, amenity.id))
+        exp = f"State.{state.id}\nCity.{city.id}\nUser.{user.id}\nPlace.{place.id}\nReview.{review.id}\nAmenity.{amenity.id}\n"  # noqa
+        expected_output = (exp)
         self.assertEqual(mock_stdout.getvalue(), expected_output)
         self.assertEqual(all_objs["State.{}".format(state.id)], state)
         self.assertEqual(all_objs["City.{}".format(city.id)], city)
@@ -87,7 +88,7 @@ class TestDBStorage(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), expected_output)
 
         # Test reload() with existing tables
-        with patch('models.engine.db_storage.Base.metadata.create_all') as mock_create_all:
+        with patch('models.engine.db_storage.Base.metadata.create_all') as mock_create_all:  # noqa
             storage.reload()
             mock_create_all.assert_called_once()
 

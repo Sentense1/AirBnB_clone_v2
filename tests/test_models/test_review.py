@@ -20,21 +20,24 @@ class test_review(test_basemodel):
 
     def test_place_id(self):
         """
-        Test case to check the data type of the 'place_id' attribute in the Review model.
+        Test case to check the data type of the 'place_id'
+        attribute in the Review model.
         """
         new = self.value()
         self.assertEqual(type(new.place_id), str)
 
     def test_user_id(self):
         """
-        Test case to check the data type of the 'user_id' attribute in the Review model.
+        Test case to check the data type of the 'user_id'
+        attribute in the Review model.
         """
         new = self.value()
         self.assertEqual(type(new.user_id), str)
 
     def test_text(self):
         """
-        Test case to check the data type of the 'text' attribute in the Review model.
+        Test case to check the data type of the 'text'
+        attribute in the Review model.
         """
         new = self.value()
         self.assertEqual(type(new.text), str)
