@@ -39,12 +39,12 @@ if getenv("HBNB_TYPE_STORAGE") and getenv("HBNB_TYPE_STORAGE") == "db" :
                             cascade="all, delete-orphan")
         amenities = relationship("Amenity", secondary="place_amenity",
                                 viewonly=False)
+        amenity_ids = []
 else:
     class Place(BaseModel):
         """
         A place to stay
         """
-        amenity_ids = []
         @property
         def reviews(self):
             """Get a list of all linked Reviews."""
