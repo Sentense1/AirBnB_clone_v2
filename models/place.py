@@ -21,7 +21,7 @@ if getenv("HBNB_TYPE_STORAGE") and getenv("HBNB_TYPE_STORAGE") == "db":
                                  ForeignKey("amenities.id"),
                                  primary_key=True, nullable=False))
 
-    class Place(BaseModel, Base):
+    class Place(BaseModel, Base):  # type: ignore
         """ A place to stay
         """
         __tablename__ = "places"
