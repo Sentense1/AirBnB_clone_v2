@@ -46,6 +46,7 @@ class Place(BaseModel, Base):  # type: ignore
                                  viewonly=False,
                                  cascade="all, delete")
     else:
+        __tablename__ = "places"
         city_id = ''
         user_id = ''
         name = ''
