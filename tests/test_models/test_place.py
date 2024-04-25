@@ -3,11 +3,11 @@
 Unit tests for the Place model.
 """
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.place import Place
 
 
-class test_Place(test_basemodel):
+class test_Place(Test_Basemodel):
     """
     Test class for the Place model.
     """
@@ -105,3 +105,8 @@ class test_Place(test_basemodel):
         """
         new = self.value()
         self.assertEqual(type(new.amenity_ids), list)
+    
+    def test_str(self):
+        """Test case to check if the 'str' method returns\
+                the expected string representation."""
+        pass

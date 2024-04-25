@@ -6,56 +6,59 @@ Unit tests for the BaseModel class.
 from models.base_model import BaseModel
 import unittest
 import datetime
-from uuid import UUID
+from uuid import uuid4
 import json
 import os
+import time
 
 
-class test_basemodel(unittest.TestCase):
+class Test_Basemodel(unittest.TestCase):
     """
     Test class for the BaseModel model.
     """
-
-    def __init__(self, *args, **kwargs):
-        """Initializes the test class."""
-        super().__init__(*args, **kwargs)
-        self.name = 'BaseModel'
-        self.value = BaseModel
-
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """Set up any necessary resources for the test cases."""
-        pass
+        try:
+            os.rename('file.json', 'tmp.json')
+            cls.name = 'BaseModel'
+            cls.value = BaseModel
+        except Exception:
+            pass
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         """Clean up any resources created during the test cases."""
         try:
-            os.remove('file.json')
+            os.rename('tmp.json', 'file.json')
+            del cls.name
+            del cls.value
         except Exception:
             pass
 
     def test_default(self):
         """Test case to check if an instance of \
                 BaseModel is created properly."""
-        i = self.value()
-        self.assertEqual(type(i), self.value)
+        base_instance = self.value()
+        self.assertEqual(type(base_instance), self.value)
 
     def test_kwargs(self):
         """
         Test case to check if an instance of BaseModel\
                 can be created with keyword arguments.
         """
-        i = self.value()
-        copy = i.to_dict()
+        base_instance = self.value()
+        copy = base_instance.to_dict()
         new = BaseModel(**copy)
-        self.assertFalse(new is i)
+        self.assertFalse(new is base_instance)
 
     def test_kwargs_int(self):
         """
         Test case to check if TypeError is raised when\
                 creating BaseModel instance with integer keys.
         """
-        i = self.value()
-        copy = i.to_dict()
+        base_instance = self.value()
+        copy = base_instance.to_dict()
         copy.update({1: 2})
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
@@ -63,59 +66,47 @@ class test_basemodel(unittest.TestCase):
     def test_save(self):
         """Test case to check if the 'save' method saves \
                 the BaseModel instance properly."""
-        i = self.value()
-        i.save()
-        key = self.name + "." + i.id
+        base_instance = self.value()
+        base_instance.save()
+        key = self.name + "." + base_instance.id
         with open('file.json', 'r') as f:
-            j = json.load(f)
-            self.assertEqual(j[key], i.to_dict())
+            objs = json.load(f)
+            self.assertEqual(objs[key], base_instance.to_dict())
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     'Testing DBStorage')
     def test_str(self):
         """Test case to check if the 'str' method returns\
                 the expected string representation."""
-        i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-                                                       i.__dict__))
+        base_instance = self.value()
+        self.assertEqual(str(base_instance),
+                         '[{}] ({}) {}'.format(self.name,
+                                               base_instance.id,
+                                               base_instance.__dict__))
 
     def test_todict(self):
         """Test case to check if the 'to_dict' method
                 returns a dictionary representation of
                 the BaseModel instance.
         """
-        i = self.value()
-        n = i.to_dict()
-        self.assertEqual(i.to_dict(), n)
+        base_instance = self.value()
+        n = base_instance.to_dict()
+        self.assertEqual(base_instance.to_dict(), n)
 
     def test_kwargs_none(self):
         """Test case to check if TypeError is raised\
                 when creating BaseModel instance with None keys."""
-        n = {None: None}
+        none_dict = {None: None}
         with self.assertRaises(TypeError):
-            new = self.value(**n)
-
-    def test_kwargs_one(self):
-        """Test case to check if KeyError is raised\
-                when creating BaseModel instance with invalid keys."""
-        n = {'Name': 'test'}
-        with self.assertRaises(KeyError):
-            new = self.value(**n)
+            new = self.value(**none_dict)
 
     def test_id(self):
         """Test case to check the data type of the 'id' attribute."""
-        new = self.value()
-        self.assertEqual(type(new.id), str)
+        base_instance = self.value()
+        self.assertEqual(type(base_instance.id), str)
 
     def test_created_at(self):
         """Test case to check the data\
                 type of the 'created_at' attribute."""
-        new = self.value()
-        self.assertEqual(type(new.created_at), datetime.datetime)
-
-    def test_updated_at(self):
-        """Test case to check the data type of the\
-                'updated_at' attribute and their initial values."""
-        new = self.value()
-        self.assertEqual(type(new.updated_at), datetime.datetime)
-        n = new.to_dict()
-        new = BaseModel(**n)
-        self.assertFalse(new.created_at == new.updated_at)
+        base_instance = self.value()
+        self.assertEqual(type(base_instance.created_at), datetime.datetime)

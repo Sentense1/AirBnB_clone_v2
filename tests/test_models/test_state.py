@@ -3,11 +3,11 @@
 Unit tests for the State model.
 """
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.state import State
 
 
-class test_state(test_basemodel):
+class test_state(Test_Basemodel):
     """
     Test class for the State model.
     """

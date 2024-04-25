@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """Module that tests the Amenity model."""
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.amenity import Amenity
 
 
-class test_Amenity(test_basemodel):
+class test_Amenity(Test_Basemodel):
     """Test class for the Amenity model."""
 
     def __init__(self, *args, **kwargs):

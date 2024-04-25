@@ -3,11 +3,11 @@
 Unit tests for the City model.
 """
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.city import City
 
 
-class test_City(test_basemodel):
+class test_City(Test_Basemodel):
     """
     Test class for the City model.
     """

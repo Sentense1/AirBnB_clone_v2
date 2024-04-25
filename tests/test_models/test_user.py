@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """Test module for the User class"""
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.user import User
 
 
-class test_User(test_basemodel):
+class test_User(Test_Basemodel):
     """Test cases for the User class"""
 
     def __init__(self, *args, **kwargs):

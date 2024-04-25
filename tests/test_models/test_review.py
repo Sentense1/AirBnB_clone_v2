@@ -3,11 +3,11 @@
 Unit tests for the Review model.
 """
 
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import Test_Basemodel
 from models.review import Review
 
 
-class test_review(test_basemodel):
+class test_review(Test_Basemodel):
     """
     Test class for the Review model.
     """
