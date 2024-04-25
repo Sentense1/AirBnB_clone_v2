@@ -58,30 +58,30 @@ class Place(BaseModel, Base):  # type: ignore
         longitude = 0.0
         amenity_ids = []
 
-        def __init__(self, *args, **kwargs):
-            """initializes Place"""
-            super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        """initializes Place"""
+        super().__init__(*args, **kwargs)
 
-        if not STORAGE_TYPE or STORAGE_TYPE != 'db':
-            @property
-            def reviews(self):
-                """Get a list of all linked Reviews."""
-                all_reviews = list(models.storage.all(Review).values())
-                review_list = [review for review in all_reviews if
-                               review.place_id == self.id]
-                return review_list
+    if not STORAGE_TYPE or STORAGE_TYPE != 'db':
+        @property
+        def reviews(self):
+            """Get a list of all linked Reviews."""
+            all_reviews = list(models.storage.all(Review).values())
+            review_list = [review for review in all_reviews if
+                           review.place_id == self.id]
+            return review_list
 
-            @property
-            def amenities(self):
-                """Get/set linked Amenities."""
-                all_am = list(models.storage.all(Amenity).values())
-                amenity_list = [a for a in all_am if a.id in self.amenity_ids]
-                return amenity_list
+        @property
+        def amenities(self):
+            """Get/set linked Amenities."""
+            all_am = list(models.storage.all(Amenity).values())
+            amenity_list = [a for a in all_am if a.id in self.amenity_ids]
+            return amenity_list
 
-            @amenities.setter
-            def amenities(self, value):
-                """
-                    Appends amenities id to amenity_ids list
-                """
-                if type(value) is Amenity:
-                    self.amenity_ids.append(value.id)
+        @amenities.setter
+        def amenities(self, value):
+            """
+            Appends amenities id to amenity_ids list
+            """
+            if type(value) is Amenity:
+                self.amenity_ids.append(value.id)
