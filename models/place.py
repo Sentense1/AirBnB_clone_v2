@@ -10,20 +10,25 @@ import models
 from models.review import Review
 from models.amenity import Amenity
 
+STORAGE_TYPE = getenv("HBNB_TYPE_STORAGE")
 
-if getenv("HBNB_TYPE_STORAGE") and getenv("HBNB_TYPE_STORAGE") == "db":
+if STORAGE_TYPE and STORAGE_TYPE == "db":
     # Define the association table
     place_amenity = Table('place_amenity', Base.metadata,
                           Column('place_id', String(60),
-                                 ForeignKey("places.id"),
+                                 ForeignKey("places.id", ondelete='CASCADE',
+                                            onupdate='CASCADE'),
                                  primary_key=True, nullable=False),
                           Column('amenity_id', String(60),
-                                 ForeignKey("amenities.id"),
+                                 ForeignKey("amenities.id", ondelete='CASCADE',
+                                            onupdate='CASCADE'),
                                  primary_key=True, nullable=False))
 
-    class Place(BaseModel, Base):  # type: ignore
-        """ A place to stay
-        """
+
+class Place(BaseModel, Base):  # type: ignore
+    """ A place to stay
+    """
+    if STORAGE_TYPE == 'db':
         __tablename__ = "places"
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -38,12 +43,9 @@ if getenv("HBNB_TYPE_STORAGE") and getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
         amenities = relationship("Amenity", secondary="place_amenity",
-                                 viewonly=False)
-else:
-    class Place(BaseModel):
-        """
-        A place to stay
-        """
+                                 viewonly=False,
+                                 cascade="all, delete")
+    else:
         city_id = ''
         user_id = ''
         name = ''
@@ -56,25 +58,30 @@ else:
         longitude = 0.0
         amenity_ids = []
 
-        @property
-        def reviews(self):
-            """Get a list of all linked Reviews."""
-            all_reviews = list(models.storage.all(Review).values())
-            review_list = [review for review in all_reviews if
-                           review.place_id == self.id]
-            return review_list
+        def __init__(self, *args, **kwargs):
+            """initializes Place"""
+            super().__init__(*args, **kwargs)
 
-        @property
-        def amenities(self):
-            """Get/set linked Amenities."""
-            all_am = list(models.storage.all(Amenity).values())
-            amenity_list = [a for a in all_am if a.id in self.amenity_ids]
-            return amenity_list
+        if not STORAGE_TYPE or STORAGE_TYPE != 'db':
+            @property
+            def reviews(self):
+                """Get a list of all linked Reviews."""
+                all_reviews = list(models.storage.all(Review).values())
+                review_list = [review for review in all_reviews if
+                               review.place_id == self.id]
+                return review_list
 
-        @amenities.setter
-        def amenities(self, value):
-            """
-                Appends amenities id to amenity_ids list
-            """
-            if type(value) is Amenity:
-                self.amenity_ids.append(value.id)
+            @property
+            def amenities(self):
+                """Get/set linked Amenities."""
+                all_am = list(models.storage.all(Amenity).values())
+                amenity_list = [a for a in all_am if a.id in self.amenity_ids]
+                return amenity_list
+
+            @amenities.setter
+            def amenities(self, value):
+                """
+                    Appends amenities id to amenity_ids list
+                """
+                if type(value) is Amenity:
+                    self.amenity_ids.append(value.id)
