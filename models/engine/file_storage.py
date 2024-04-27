@@ -30,7 +30,7 @@ class FileStorage:
         if cls is not None:
             if isinstance(cls, str):
                 try:
-                    cls = global()[cls]
+                    cls = globals()[cls]
                 except Exception as e:
                     print('cls not valid: ', e)
             cls_dict = {}
