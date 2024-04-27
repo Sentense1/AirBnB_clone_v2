@@ -31,11 +31,12 @@ class FileStorage:
             if isinstance(cls, str):
                 try:
                     cls = globals()[cls]
+                    print(cls)
                 except Exception as e:
                     print('cls not valid: ', e)
             cls_dict = {}
             for k, v in self.__objects.items():
-                if isinstance(cls, str):
+                if cls == type(v):
                     cls_dict[k] = v
             return cls_dict
         return self.__objects
