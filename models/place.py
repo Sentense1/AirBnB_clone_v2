@@ -41,9 +41,9 @@ if STORAGE_TYPE and STORAGE_TYPE == "db":
         longitude = Column(Float)
         if STORAGE_TYPE == 'db':
             reviews = relationship("Review", backref="place",
-                                cascade="all, delete-orphan")
+                                   cascade="all, delete-orphan")
             amenities = relationship("Amenity", secondary="place_amenity",
-                                    viewonly=False)
+                                     viewonly=False)
 
         @classmethod
         def __declare_last__(cls):

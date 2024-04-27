@@ -30,6 +30,9 @@ class TestHBNBCommand(unittest.TestCase):
         except IOError:
             pass
         cls.HBNB = HBNBCommand()
+        if STORAGE_TYPE and STORAGE_TYPE == 'db':
+            cls.storage = models.storage
+            cls.storage.reload()
 
     @classmethod
     def tearDownClass(cls):
@@ -44,7 +47,7 @@ class TestHBNBCommand(unittest.TestCase):
             pass
         del cls.HBNB
         if STORAGE_TYPE and STORAGE_TYPE == 'db':
-            models.storage._DBStorage__session.close()
+            cls.storage.close()
 
     def setUp(self):
         """Reset FileStorage objects dictionary."""

@@ -3,7 +3,7 @@
 import os
 import unittest
 from unittest.mock import patch
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
@@ -194,21 +194,10 @@ class TestDBStorage(unittest.TestCase):
 
     @unittest.skipIf(not STORAGE_TYPE or STORAGE_TYPE != 'db',
                      "Testing FILEStorage")
-    def test_close(self):
-        """Test the close() method of DBStorage."""
-        pass
-
-    @unittest.skipIf(not STORAGE_TYPE or STORAGE_TYPE != 'db',
-                     "Testing FILEStorage")
-    def test_console(self):
-        """Test the close() method of DBStorage."""
-        pass
-
-    @unittest.skipIf(not STORAGE_TYPE or STORAGE_TYPE != 'db',
-                     "Testing FILEStorage")
     def test_base_model(self):
         """Test the close() method of DBStorage."""
-        pass
+        base_model = BaseModel()
+        self.assertNotIsInstance(base_model, Base)
 
 
 class TestDBStorageNewSaveReload(unittest.TestCase):
@@ -231,8 +220,6 @@ class TestDBStorageNewSaveReload(unittest.TestCase):
         """
         teardown for new, save, and reload
         """
-        if self.user in self.storage._DBStorage__session:
-            self.storage.delete(self.user)
         self.storage.close()
 
     @unittest.skipIf(not STORAGE_TYPE or STORAGE_TYPE != 'db',
@@ -260,12 +247,6 @@ class TestDBStorageNewSaveReload(unittest.TestCase):
 
         all_users_after_new = self.storage.all('User')
         self.assertIn(self.user, all_users_after_new.values())
-
-    @unittest.skipIf(not STORAGE_TYPE or STORAGE_TYPE != 'db',
-                     "Testing FILEStorage")
-    def test_reload(self, ):
-        """Test reload method."""
-        pass
 
 
 if __name__ == '__main__':

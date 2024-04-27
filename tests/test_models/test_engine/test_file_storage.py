@@ -68,6 +68,127 @@ class TestFileStorage(unittest.TestCase):
         self.assertFalse(os.path.exists('file.json'))
 
     @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_new_state(self):
+        """Test that a new object is correctly added to __objects."""
+        new = State(name='California')
+        for obj in storage.all().values():
+            self.assertTrue(new is obj)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_all_state(self):
+        """Test that __objects is properly returned."""
+        new = State(name='California')
+        temp = storage.all()
+        self.assertIsInstance(temp, dict)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_state_model_instantiation(self):
+        """Test that a file is not created on state save."""
+        new = State(name='California')
+        self.assertFalse(os.path.exists('file.json'))
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_new_city(self):
+        """Test that a new object is correctly added to __objects."""
+        state = State(name='California')
+        new = City(state_id=state.id)
+        for obj in storage.all().values():
+            self.assertTrue(new is obj)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_all_city(self):
+        """Test that __objects is properly returned."""
+        state = State(name='California')
+        new = City(state_id=state.id)
+        temp = storage.all()
+        self.assertIsInstance(temp, dict)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_city_model_instantiation(self):
+        """Test that a file is not created on city save."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        self.assertFalse(os.path.exists('file.json'))
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_new_place(selfj):
+        """Test that a new object is correctly added to __objects."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        place = Place(city_id=city.id, name='House1')
+        for obj in storage.all().values():
+            self.assertTrue(place is obj)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_all_place(self):
+        """Test that __objects is properly returned."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        place = Place(city_id=city.id, name='House1')
+        temp = storage.all(place)
+        self.assertIsInstance(temp, dict)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_place_model_instantiation(self):
+        """Test that a file is not created on place save."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        place = Place(city_id=city.id, name='House1')
+        self.assertFalse(os.path.exists('file.json'))
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_new_review(self):
+        """Test that a new object is correctly added to __objects."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        user = User(email='email@email.com', password='password')
+        place = Place(city_id=city.id, name='House1')
+        review = Review(text='wonderful', user_id=user.id, place_id=place.id)
+        for obj in storage.all().values():
+            self.assertTrue(review is obj)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_all_review(self):
+        """Test that __objects is properly returned."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        user = User(email='email@email.com', password='password')
+        place = Place(city_id=city.id, name='House1')
+        review = Review(text='wonderful', user_id=user.id, place_id=place.id)
+        temp = storage.all(Review)
+        self.assertIsInstance(temp, dict)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_review_model_instantiation(self):
+        """Test that a file is not created on place save."""
+        state = State(name='California')
+        city = City(state_id=state.id)
+        user = User(email='email@email.com', password='password')
+        place = Place(city_id=city.id, name='House1')
+        review = Review(text='wonderful', user_id=user.id, place_id=place.id)
+        self.assertFalse(os.path.exists('file.json'))
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_new_amenity(self):
+        """Test that a new object is correctly added to __objects."""
+        amenity = Amenity(name='WIFI')
+        for obj in storage.all().values():
+            self.assertTrue(amenity is obj)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_all_amenity(self):
+        """Test that __objects is properly returned."""
+        amenity = Amenity(name='wifi')
+        temp = storage.all(Amenity)
+        self.assertIsInstance(temp, dict)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_amenity_model_instantiation(self):
+        """Test that a file is not created on place save."""
+        amenity = Amenity(name='wifi')
+        self.assertFalse(os.path.exists('file.json'))
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_empty(self):
         """Test that data is saved to the file."""
         new = BaseModel()
@@ -137,16 +258,6 @@ class TestFileStorage(unittest.TestCase):
         """Test that the storage object is created."""
         from models.engine.file_storage import FileStorage
         self.assertEqual(type(storage), FileStorage)
-
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
-    def test_console(self):
-        """Test that tests console."""
-        pass
-
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
-    def test_base_model(self):
-        """Test that tests basemodel."""
-        pass
 
 
 if __name__ == '__main__':
