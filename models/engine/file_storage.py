@@ -29,7 +29,10 @@ class FileStorage:
         """
         if cls is not None:
             if isinstance(cls, str):
-                cls = eval(cls)
+                try:
+                    cls = global()[cls]
+                except Exception as e:
+                    print('cls not valid: ', e)
             cls_dict = {}
             for k, v in self.__objects.items():
                 if isinstance(cls, str):
