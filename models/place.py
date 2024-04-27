@@ -3,7 +3,8 @@
 from os import getenv
 from sqlalchemy import (Column, Float,
                         ForeignKey, Integer,
-                        String, Table)
+                        String, Table,
+                        inspect)
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 import models
@@ -16,16 +17,14 @@ if STORAGE_TYPE and STORAGE_TYPE == "db":
     # Define the association table
     place_amenity = Table('place_amenity', Base.metadata,
                           Column('place_id', String(60),
-                                 ForeignKey("places.id", ondelete='CASCADE',
-                                            onupdate='CASCADE'),
+                                 ForeignKey("places.id"),
                                  primary_key=True, nullable=False),
                           Column('amenity_id', String(60),
-                                 ForeignKey("amenities.id", ondelete='CASCADE',
-                                            onupdate='CASCADE'),
+                                 ForeignKey("amenities.id"),
                                  primary_key=True, nullable=False))
 
 
-class Place(BaseModel, Base):  # type: ignore
+class Place(BaseModel, Base):
     """ A place to stay
     """
     __tablename__ = "places"
@@ -43,9 +42,8 @@ class Place(BaseModel, Base):  # type: ignore
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
         amenities = relationship("Amenity", secondary="place_amenity",
-                                 viewonly=False,
-                                 cascade="all, delete")
-    else:
+                                 viewonly=False)
+    if not STORAGE_TYPE or STORAGE_TYPE != 'db':
         city_id = ''
         user_id = ''
         name = ''
@@ -85,3 +83,12 @@ class Place(BaseModel, Base):  # type: ignore
             """
             if type(value) is Amenity:
                 self.amenity_ids.append(value.id)
+
+    @classmethod
+    def __declare_last__(cls):
+        """
+        Hook called by SQLAlchemy after all models have been generated.
+        """
+        # Suppress SAWarning about expected row deletions
+        mapper = inspect(cls)
+        mapper.confirm_deleted_rows = False
