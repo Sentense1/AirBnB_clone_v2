@@ -221,7 +221,7 @@ class TestPlace_FileStorage(unittest.TestCase):
         """Test case to check if the 'str' method returns\
                 the expected string representation."""
         place_dict = self.place.__dict__.copy()
-        place_dict.pop('_sa_instance_state')
+        place_dict.pop('_sa_instance_state', None)
         self.assertEqual(str(self.place),
                          '[{}] ({}) {}'.format(self.place.__class__.__name__,
                                                self.place.id,
