@@ -8,22 +8,25 @@ from models.city import City
 from os import getenv
 
 
-class State(BaseModel, Base):
-    """Represents a state for a MySQL database.
+if getenv("HBNB_TYPE_STORAGE") and getenv("HBNB_TYPE_STORAGE") == "db":
+    class State(BaseModel, Base):
+        """Represents a state for a MySQL database.
 
-    Inherits from SQLAlchemy Base and links to the MySQL table states.
+        Inherits from SQLAlchemy Base and links to the MySQL table states.
 
-    Attributes:
-        __tablename__ (str): The name of the MySQL table to store States.
-        name (sqlalchemy String): The name of the State.
-        cities (sqlalchemy relationship): The State-City relationship.
-    """
-    __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-
-    if getenv("HBNB_TYPE_STORAGE") == "db":
+        Attributes:
+            __tablename__ (str): The name of the MySQL table to store States.
+            name (sqlalchemy String): The name of the State.
+            cities (sqlalchemy relationship): The State-City relationship.
+        """
+        __tablename__ = "states"
+        name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state", cascade="all, delete")
-    else:
+else:
+    class State(BaseModel):
+        """ State class """
+        name = ""
+
         @property
         def cities(self):
             """Get a list of City instances with
