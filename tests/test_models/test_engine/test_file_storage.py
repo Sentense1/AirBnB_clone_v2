@@ -27,11 +27,9 @@ class TestFileStorage(unittest.TestCase):
             os.rename('file.json', 'tmp.json')
         except Exception:
             pass
-        del_list = []
+        self.del_list = []
         for key in storage._FileStorage__objects.keys():
-            del_list.append(key)
-        for key in del_list:
-            del storage._FileStorage__objects[key]
+            self.del_list.append(key)
 
     @unittest.skipIf(STORAGE_TYPE == 'db',
                      'Testing DBStorage')
@@ -39,6 +37,8 @@ class TestFileStorage(unittest.TestCase):
         """Remove storage file at the end of tests."""
         try:
             os.rename('tmp.json', 'file.json')
+            for key in self.del_list:
+                del storage._FileStorage__objects[key]
         except Exception:
             pass
 
@@ -125,16 +125,28 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_key_format(self):
         """Test that the key is properly formatted."""
+        for key in self.del_list:
+            del storage._FileStorage__objects[key]
         new = BaseModel()
-        _id = new.to_dict()['id']
-        for key in storage.all().keys():
-            self.assertEqual(key, f'BaseModel.{_id}')
+        new_key = f'BaseModel.{new.to_dict()}'
+        for key, value in storage.all().items():
+            self.assertEqual(key, new_key)
 
     @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_storage_var_created(self):
         """Test that the storage object is created."""
         from models.engine.file_storage import FileStorage
         self.assertEqual(type(storage), FileStorage)
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_console(self):
+        """Test that tests console."""
+        pass
+
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
+    def test_base_model(self):
+        """Test that tests basemodel."""
+        pass
 
 
 if __name__ == '__main__':

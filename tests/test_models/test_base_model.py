@@ -3,13 +3,13 @@
 Unit tests for the BaseModel class.
 """
 
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 import unittest
 import datetime
-from uuid import uuid4
 import json
 import os
-import time
+
+STORAGE_TYPE = os.getenv('HBNB_TYPE_STORAGE')
 
 
 class Test_Basemodel(unittest.TestCase):
@@ -36,12 +36,14 @@ class Test_Basemodel(unittest.TestCase):
         except Exception:
             pass
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_default(self):
         """Test case to check if an instance of \
                 BaseModel is created properly."""
         base_instance = self.value()
         self.assertEqual(type(base_instance), self.value)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_kwargs(self):
         """
         Test case to check if an instance of BaseModel\
@@ -52,6 +54,7 @@ class Test_Basemodel(unittest.TestCase):
         new = BaseModel(**copy)
         self.assertFalse(new is base_instance)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_kwargs_int(self):
         """
         Test case to check if TypeError is raised when\
@@ -63,6 +66,7 @@ class Test_Basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_save(self):
         """Test case to check if the 'save' method saves \
                 the BaseModel instance properly."""
@@ -73,6 +77,7 @@ class Test_Basemodel(unittest.TestCase):
             objs = json.load(f)
             self.assertEqual(objs[key], base_instance.to_dict())
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
                      'Testing DBStorage')
     def test_str(self):
@@ -84,6 +89,7 @@ class Test_Basemodel(unittest.TestCase):
                                                base_instance.id,
                                                base_instance.__dict__))
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_todict(self):
         """Test case to check if the 'to_dict' method
                 returns a dictionary representation of
@@ -93,6 +99,7 @@ class Test_Basemodel(unittest.TestCase):
         n = base_instance.to_dict()
         self.assertEqual(base_instance.to_dict(), n)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_kwargs_none(self):
         """Test case to check if TypeError is raised\
                 when creating BaseModel instance with None keys."""
@@ -100,13 +107,35 @@ class Test_Basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = self.value(**none_dict)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_id(self):
         """Test case to check the data type of the 'id' attribute."""
         base_instance = self.value()
         self.assertEqual(type(base_instance.id), str)
 
+    @unittest.skipIf(STORAGE_TYPE == 'db', 'Testing DBStorage')
     def test_created_at(self):
         """Test case to check the data\
                 type of the 'created_at' attribute."""
         base_instance = self.value()
         self.assertEqual(type(base_instance.created_at), datetime.datetime)
+
+    @unittest.skipIf(STORAGE_TYPE != 'db', 'Testing FileStorage')
+    def test_mapped_to_base(self):
+        """
+        test if basemodel is mapped to sqlalchemy
+        """
+        b_instance = BaseModel()
+        self.assertFalse('_sa_instance_state' in b_instance.__dict__)
+
+    @unittest.skipIf(STORAGE_TYPE != 'db', 'Testing FileStorage')
+    def test_is_subclass(self):
+        """
+        test if basemodel is mapped to sqlalchemy
+        """
+        b_instance = BaseModel()
+        self.assertFalse(isinstance(b_instance, Base))
+
+
+if __name__ == "__main__":
+    unittest.main()
