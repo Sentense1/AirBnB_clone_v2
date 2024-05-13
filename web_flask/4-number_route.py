@@ -1,28 +1,28 @@
 #!/usr/bin/python3
 """Starts a Flask web application.
 """
-
 from flask import Flask, request
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 
 # Define the route for the root URL '/'
-@app.route('/', strict_slashes=False)
+@app.route('/')
 def hello_hbnb():
     """Displays 'Hello HBNB!'."""
     return "Hello HBNB!"
 
 
 # Define the route for '/hbnb'
-@app.route('/hbnb', strict_slashes=False)
+@app.route('/hbnb')
 def hbnb():
     """Displays 'HBNB'."""
     return "HBNB"
 
 
 # Define the route for '/c/<text>'
-@app.route('/c/<text>', strict_slashes=False)
+@app.route('/c/<text>')
 def c_with_text(text):
     """Displays 'C' followed by the value of <text>.
 
@@ -34,8 +34,8 @@ def c_with_text(text):
 
 
 # Define the route for '/python/(<text>)'
-@app.route('/python/', defaults={'text', 'is_cool'}, strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
+@app.route('/python/', defaults={'text': 'is_cool'})
+@app.route('/python/<text>')
 def python_with_text(text):
     """Displays 'Python' followed by the value of <text>.
 
@@ -47,13 +47,11 @@ def python_with_text(text):
 
 
 # Define the route for '/number/<n>'
-@app.route('/number/<int:n>', strict_slashes=False)
+@app.route('/number/<int:n>')
 def number(n):
     """Displays 'n is a number' only if n is an integer."""
     return "{} is a number".format(n)
 
 
 if __name__ == "__main__":
-    # Start the Flask development server
-    # Listen on all available network interfaces (0.0.0.0) and port 5000
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
