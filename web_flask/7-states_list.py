@@ -2,6 +2,7 @@
 """ Starts a Flask web application. """
 from flask import Flask, render_template
 from models import storage
+from models.state import State
 
 # creates an instance of the Flask class and assigns
 # it to the variable app
@@ -20,7 +21,7 @@ def states_list():
     # sorted_states = sorted(states, key=lambda state: state.get('name'))
     # Render the template and pass the list of states to the template
     return render_template("7-states_list.html",
-                           states=storage.all('State'))
+                           states=storage.all(State))
 
 
 # Teardown app context to remove the
