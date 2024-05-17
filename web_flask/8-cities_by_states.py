@@ -4,7 +4,6 @@
 from flask import Flask, render_template
 from models import storage
 from models.state import State
-from sqlalchemy.orm import scoped_session, sessionmaker
 
 # creates an instance of the Flask class and assigns it to the variable app
 app = Flask(__name__)
